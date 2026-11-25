@@ -1,0 +1,15 @@
+[package]
+name = "sqltrace-stub-oci"
+description = "試験用の oci.dll: OCI と OCI7 の入口を持つだけで、DB にはつながない"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+# 試験のアプリが読み込む名前（本物と同じ oci.dll）にする。
+name = "oci"
+crate-type = ["cdylib"]
+
+[lints]
+workspace = true

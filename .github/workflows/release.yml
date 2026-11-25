@@ -1,0 +1,62 @@
+name: Release
+
+# v0.1.0 の形のタグを push したら、確認を通してからリリース版をビルドし、GitHub のリリースに zip を添付する。
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write # リリースを作って zip を添付するため
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # タグと Cargo.toml の版が違うまま出さないよう、ビルドの前に止める。
+      - name: Version
+        id: version
+        shell: pwsh
+        run: |
+          $tag = '${{ github.ref_name }}'
+          $toml = Get-Content Cargo.toml -Raw
+          if ($toml -notmatch '(?ms)^\[workspace\.package\].*?^version\s*=\s*"([^"]+)"') {
+              throw 'Cargo.toml の [workspace.package] に version が見つかりません'
+          }
+          $version = $Matches[1]
+          if ($tag -ne "v$version") {
+              throw "タグ（$tag）と Cargo.toml の版（$version）が違います。タグを v$version にするか、版を直してください"
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Toolchain
+        run: rustup show
+
+      - name: Check (fmt / clippy / test / portable)
+        shell: pwsh
+        run: ./tools/check.ps1
+
+      - name: Build and package
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = '${{ steps.version.outputs.version }}'
+          New-Item -ItemType Directory -Force dist | Out-Null
+          foreach ($arch in @(@{ Name = 'x64'; Target = 'x86_64-pc-windows-msvc' }, @{ Name = 'x86'; Target = 'i686-pc-windows-msvc' })) {
+              cargo build --release --locked -p sqltrace-cli -p sqltrace-gui --target $arch.Target
+              if ($LASTEXITCODE -ne 0) { throw "$($arch.Target) のビルドに失敗しました" }
+              $stage = "dist/sqltrace-$version-$($arch.Name)"
+              New-Item -ItemType Directory -Force $stage | Out-Null
+              Copy-Item "target/$($arch.Target)/release/sqltrace.exe", "target/$($arch.Target)/release/sqltrace-gui.exe", README.md, README.ja.md, LICENSE $stage
+              Compress-Archive -Path "$stage/*" -DestinationPath "$stage.zip" -Force
+          }
+
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          gh release create '${{ github.ref_name }}' (Get-ChildItem dist/*.zip).FullName --title 'sqlTrace ${{ steps.version.outputs.version }}' --generate-notes
+          if ($LASTEXITCODE -ne 0) { throw 'リリースの作成に失敗しました' }

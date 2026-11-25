@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # rust-toolchain.toml の版・components・targets を rustup が入れる。
+      - name: Toolchain
+        run: rustup show
+
+      - name: Check (fmt / clippy / test / portable)
+        shell: pwsh
+        run: ./tools/check.ps1

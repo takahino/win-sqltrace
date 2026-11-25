@@ -1,0 +1,28 @@
+[package]
+name = "sqltrace-gui"
+description = "sqlTrace の GUI（egui）: プロセスの一覧と照準で選んでアタッチ、引数付きで起動、出力先の指定"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "sqltrace-gui"
+path = "src/main.rs"
+
+[dependencies]
+sqltrace-core.workspace = true
+sqltrace-catalog.workspace = true
+sqltrace-export.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+sqltrace-session.workspace = true
+sqltrace-win.workspace = true
+eframe.workspace = true
+egui_extras.workspace = true
+
+[build-dependencies]
+sqltrace-build.workspace = true
+
+[lints]
+workspace = true

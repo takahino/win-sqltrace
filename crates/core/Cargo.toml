@@ -1,0 +1,10 @@
+[package]
+name = "sqltrace-core"
+description = "sqlTrace のドメイン型と、OS に依存しない処理"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true

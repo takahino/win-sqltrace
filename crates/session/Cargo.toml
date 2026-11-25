@@ -1,0 +1,17 @@
+[package]
+name = "sqltrace-session"
+description = "sqlTrace の組み立て: カタログ・デバッグ層・相関器をつなぎ、デバッグのスレッドを持つ"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+sqltrace-core.workspace = true
+sqltrace-catalog.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+sqltrace-win.workspace = true
+
+[lints]
+workspace = true

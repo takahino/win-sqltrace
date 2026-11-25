@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- sqlTrace のアイコン: データベース（円柱）を、歯車の形の枠の虫眼鏡で見る。16px でも見分けられるよう、太く単純な形にする。 -->
+  <rect x="8" y="8" width="240" height="240" rx="52" fill="#1f3a5f"/>
+  <!-- 円柱 -->
+  <path d="M42,66 v104 a68,22 0 0 0 136,0 v-104" fill="#dce6f0"/>
+  <ellipse cx="110" cy="66" rx="68" ry="22" fill="#f6f9fc"/>
+  <path d="M42,101 a68,22 0 0 0 136,0" fill="none" stroke="#1f3a5f" stroke-width="7"/>
+  <path d="M42,136 a68,22 0 0 0 136,0" fill="none" stroke="#1f3a5f" stroke-width="7"/>
+  <!-- 虫眼鏡の柄（枠の下に描き、枠で根元を隠す）。始まりはレンズの中心から 54 離す: 丸い端（半径 11）を
+       引いても 43 で、輪の内側の縁（34）より外なので、半透明のレンズの中に柄が見えない。 -->
+  <line x1="208" y1="202" x2="232" y2="226" stroke="#f0a03e" stroke-width="22" stroke-linecap="round"/>
+  <!-- 虫眼鏡の枠: 歯車（8 枚の歯と輪） -->
+  <g transform="translate(170,164)" fill="#f0a03e">
+    <rect x="-10" y="-62" width="20" height="22" rx="3"/>
+    <rect x="-10" y="-62" width="20" height="22" rx="3" transform="rotate(45)"/>
+    <rect x="-10" y="-62" width="20" height="22" rx="3" transform="rotate(90)"/>
+    <rect x="-10" y="-62" width="20" height="22" rx="3" transform="rotate(135)"/>
+    <rect x="-10" y="-62" width="20" height="22" rx="3" transform="rotate(180)"/>
+    <rect x="-10" y="-62" width="20" height="22" rx="3" transform="rotate(225)"/>
+    <rect x="-10" y="-62" width="20" height="22" rx="3" transform="rotate(270)"/>
+    <rect x="-10" y="-62" width="20" height="22" rx="3" transform="rotate(315)"/>
+    <circle r="42" fill="#1f3a5f" fill-opacity="0.55" stroke="#f0a03e" stroke-width="16"/>
+  </g>
+</svg>

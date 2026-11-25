@@ -1,0 +1,28 @@
+[package]
+name = "sqltrace-itest"
+description = "sqlTrace の統合試験と、試験で動かす対象のアプリ（DB は要らない）"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[target.'cfg(windows)'.dependencies.windows-sys]
+workspace = true
+features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_System_Diagnostics_Debug",
+    "Win32_System_Kernel",
+    "Win32_System_JobObjects",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Threading",
+]
+
+[target.'cfg(windows)'.dependencies]
+sqltrace-core.workspace = true
+sqltrace-session.workspace = true
+sqltrace-export.workspace = true
+sqltrace-win.workspace = true
+
+[lints]
+workspace = true

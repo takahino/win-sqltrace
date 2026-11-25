@@ -1,0 +1,57 @@
+[workspace]
+resolver = "2"
+# crate は計画の順に足す（core ← catalog / export / jdwp ← session → win、cli と gui は session を使う）。
+members = [
+    "crates/core",
+    "crates/catalog",
+    "crates/win",
+    "crates/session",
+    "crates/export",
+    "crates/build",
+    "crates/cli",
+    "crates/gui",
+    "crates/itest",
+    # 試験用の DLL（本物と同じ名前の oci.dll と sqora32.dll）。
+    "crates/stubs/oci",
+    "crates/stubs/sqora",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+publish = false
+
+[workspace.dependencies]
+sqltrace-core = { path = "crates/core" }
+sqltrace-catalog = { path = "crates/catalog" }
+sqltrace-win = { path = "crates/win" }
+sqltrace-session = { path = "crates/session" }
+windows-sys = "0.61"
+sqltrace-export = { path = "crates/export" }
+sqltrace-build = { path = "crates/build" }
+# 既定の機能は使わない（zlib などの C の依存を持ち込まない）。
+rust_xlsxwriter = { version = "0.104", default-features = false }
+# GUI。描画は wgpu（DirectX 12。GPU のない仮想マシンやリモートデスクトップでもソフトウェアの描画で動く）。
+# 0.36 以降は今のツールチェーン（1.94）より新しい Rust を求める。
+eframe = { version = "0.35", default-features = false, features = ["default_fonts", "wgpu"] }
+egui_extras = { version = "0.35", default-features = false }
+
+# 各 crate は `[lints] workspace = true` でこれを継ぐ。
+[workspace.lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+unused_must_use = "deny"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+# デバッグ層は unsafe が多い。なぜ安全かを `// SAFETY:` で書かせる。
+undocumented_unsafe_blocks = "warn"
+# 対象のプロセスを止めたまま panic すると後始末が難しくなるので、本体では unwrap を避ける（試験は clippy.toml で許可）。
+unwrap_used = "warn"
+dbg_macro = "warn"
+# 標準出力に書いてよいのは cli と export の出力部分だけ（そこで個別に許可する）。
+print_stdout = "warn"
+
+[profile.release]
+# panic = "abort" にすると Drop が走らず、対象に int3 が残る。後始末のために unwind を保つ。
+panic = "unwind"

@@ -1,0 +1,13 @@
+{
+  "editor.formatOnSave": true,
+  "files.eol": "\n",
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "[powershell]": {
+    "files.encoding": "utf8bom",
+    "files.eol": "\r\n"
+  },
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.check.allTargets": true
+}

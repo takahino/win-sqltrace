@@ -1,0 +1,26 @@
+[package]
+name = "sqltrace-cli"
+description = "sqlTrace のコマンドライン"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "sqltrace"
+path = "src/main.rs"
+
+[dependencies]
+sqltrace-core.workspace = true
+sqltrace-catalog.workspace = true
+sqltrace-export.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+sqltrace-session.workspace = true
+sqltrace-win.workspace = true
+
+[build-dependencies]
+sqltrace-build.workspace = true
+
+[lints]
+workspace = true
